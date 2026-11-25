@@ -12,7 +12,11 @@ app.set('trust proxy', 1); // needed behind Render / AWS load balancers
 
 // security + parsing
 app.use(helmet());
-app.use(cors({ origin: (process.env.CLIENT_URL || 'http://localhost:5173').split(','), credentials: true }));
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: '50kb' }));
 app.use(mongoSanitize()); // blocks NoSQL injection like { "$gt": "" }
 if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));

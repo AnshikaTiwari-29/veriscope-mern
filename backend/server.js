@@ -4,6 +4,11 @@ const connectDB = require('./src/config/db');
 
 const PORT = process.env.PORT || 5000;
 
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`VeriScope API running on http://localhost:${PORT}`));
-});
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`VeriScope API running on http://localhost:${PORT}`));
+  })
+  .catch((err) => {
+    console.error('MongoDB connection failed:', err.message);
+    process.exit(1);
+  });
